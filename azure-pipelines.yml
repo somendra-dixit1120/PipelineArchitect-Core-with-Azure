@@ -1,7 +1,5 @@
 # ASP.NET Core
 # Build and test ASP.NET Core projects targeting .NET Core.
-# Add steps that run tests, create a NuGet package, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
 
 trigger:
 - master
@@ -13,5 +11,33 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
+- task: DotNetCoreCLI@2
+  displayName: 'Restore NuGet packages'
+  inputs:
+    command: 'restore'
+    projects: '**/*.csproj'
+
 - script: dotnet build --configuration $(buildConfiguration)
   displayName: 'dotnet build $(buildConfiguration)'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Run Unit Tests'
+  inputs:
+    command: 'test'
+    projects: '**/*Tests/*.csproj' # Adjust pattern to match your test projects
+    arguments: '--configuration $(buildConfiguration) --collect "XPlat Code Coverage"'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Publish App'
+  inputs:
+    command: 'publish'
+    publishWebProjects: true
+    arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)/drop'
+    zipAfterPublish: true
+
+- task: PublishPipelineArtifact@1
+  displayName: 'Publish Artifacts'
+  inputs:
+    targetPath: '$(Build.ArtifactStagingDirectory)/drop'
+    artifactName: 'drop'
+    publishLocation: 'pipeline'
