@@ -2,7 +2,7 @@
 
 This document tracks development progress, technical notes, pipeline configurations, and future ideas for the **Automated trigger pipeline azure** project.
 
-## 📌 Milestone Log
+## 📌 Milestone Log 
 * **[Current Phase]:** Integrated ASP.NET Core Razor Pages template with automated Azure DevOps CI/CD triggers.
 * **Version Control:** Migrated solution structures, configured `.gitignore` to exclude temporary `.vs/`, `bin/`, and `obj/` build artifacts.
 * **Pipeline Integration:** Successfully configured triggers to detect master/main branch pushes and automatically build code.
